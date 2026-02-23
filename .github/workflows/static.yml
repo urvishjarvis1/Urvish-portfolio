@@ -40,7 +40,7 @@ jobs:
           echo "NPM_CONFIG_OPTIONAL=false" >> $GITHUB_ENV
           echo "CI=true" >> $GITHUB_ENV
 
-      - name: Diagnostic: Node & NPM
+      - name: Diagnostic Node & NPM
         run: |
           node -v
           npm -v
