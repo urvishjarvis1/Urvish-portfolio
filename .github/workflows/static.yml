@@ -32,14 +32,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
-          node-version: '18'
-
-      - name: Install dependencies (skip optional native deps to avoid PostCSS native-binding errors)
+          node-version: '20'
+      - name: Set NPM env
         run: |
-          # skip optional native deps which can fail in some CI environments
-          npm ci --no-optional || npm ci
+          echo "NPM_CONFIG_OPTIONAL=false" >> $GITHUB_ENV
+          echo "CI=true" >> $GITHUB_ENV
+
+      - name: Install dependencies (robust)
+        run: |
+          # try a clean install skipping optional native deps; if that fails, remove lockfile and retry
+          npm ci --no-optional || (rm -rf node_modules package-lock.json && npm install --no-optional)
 
       - name: Build
         run: npm run build --if-present
