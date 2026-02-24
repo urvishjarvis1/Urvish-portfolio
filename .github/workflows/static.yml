@@ -35,34 +35,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Set NPM env
+          cache: 'npm'
+
+      - name: Clean install and retry on failure
         run: |
-          echo "NPM_CONFIG_OPTIONAL=false" >> $GITHUB_ENV
-          echo "CI=true" >> $GITHUB_ENV
-
-      - name: Diagnostic Node & NPM
-        run: |
-          node -v
-          npm -v
-
-      - name: Enable Corepack (pnpm)
-        run: |
-          corepack enable
-          corepack prepare pnpm@latest --activate
-
-      - name: Clear pnpm cache (force clean install)
-        run: |
-          pnpm store prune || true
-          rm -rf node_modules
-
-      - name: Install dependencies with pnpm (force rebuild natives)
-        run: pnpm install --force
-
-      - name: Rebuild Rollup native binary
-        run: pnpm rebuild @rollup/rollup-linux-x64-gnu || pnpm add --save-optional @rollup/rollup-linux-x64-gnu
+          npm ci || npm ci || (rm -rf node_modules package-lock.json && npm install)
 
       - name: Build
-        run: pnpm build
+        run: npm run build
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
