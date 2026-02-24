@@ -50,8 +50,16 @@ jobs:
           corepack enable
           corepack prepare pnpm@latest --activate
 
-      - name: Install dependencies with pnpm
-        run: pnpm install
+      - name: Clear pnpm cache (force clean install)
+        run: |
+          pnpm store prune || true
+          rm -rf node_modules
+
+      - name: Install dependencies with pnpm (force rebuild natives)
+        run: pnpm install --force
+
+      - name: Rebuild Rollup native binary
+        run: pnpm rebuild @rollup/rollup-linux-x64-gnu || pnpm add --save-optional @rollup/rollup-linux-x64-gnu
 
       - name: Build
         run: pnpm build
