@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/urvish-portfolio/',
+  // Use relative base so the site works regardless of repo name casing or subpath
+  base: './',
   plugins: [react()],
 })
