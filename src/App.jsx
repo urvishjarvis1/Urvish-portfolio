@@ -25,7 +25,8 @@ const AnimatedAvatar = ({ className = 'w-full h-80 md:h-96' }) => {
     >
       {!imgError ? (
         <img
-          src="../public/avatar.jpeg"
+          // use relative path since Vite copies public/* to build root
+          src="./avatar.jpeg"
           alt="Urvish Rana"
           onError={() => setImgError(true)}
           className="w-full h-full object-cover"
